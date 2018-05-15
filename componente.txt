@@ -1,0 +1,5 @@
+Procesor
+Placa de baza
+Placa video
+Memorii
+Hdd
