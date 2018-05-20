@@ -130,29 +130,29 @@ public class Produs {
             Connection con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
             String sql ;
             PreparedStatement pstm ;
-
-            file = new FileReader ("Produse.txt");
+            file = new FileReader ("produse.txt");
             Scanner sc = new Scanner( file );
-            
+       
             while(sc.hasNextLine())
             {
-                contorProdus++;
+                /*contorProdus++;
                 sql = "insert into produs values (?,?,?,?,?,?,?,?,?)";
                 con.setAutoCommit(false);
                 pstm = con.prepareStatement(sql);
                 
-                pstm.setInt(1 , contorProdus );
-                pstm.setString(2 , sc.next());
-                pstm.setString(3 , sc.next());
-                pstm.setDouble(4 , sc.nextDouble());
-                pstm.setInt(5 , sc.nextInt());
-                pstm.setString(6 , sc.nextInt() + " " + sc.next());
-                pstm.setString(7 , sc.next());
-                pstm.setInt(8 , sc.nextInt());
-                pstm.setInt(9 , sc.nextInt());
-                
+                pstm.setInt(1 , contorProdus );                          //cod produs
+                pstm.setString(2 , sc.next());                           //producator
+                pstm.setString(3 , sc.next());                           //model
+                pstm.setDouble(4 , sc.nextDouble());                     //pret produs
+                pstm.setInt(5 , sc.nextInt());                           //an fabricatie
+                pstm.setString(6 , sc.nextInt() + " " + sc.next());      //garantie
+                pstm.setString(7 , sc.next());                           //tara provenienta
+                pstm.setInt(8 , sc.nextInt());                           //stoc
+                pstm.setInt(9 , sc.nextInt());                           //tip
+          
                 pstm.execute();
-                con.commit();    
+                con.commit(); */
+                System.out.println(sc.next() + " " + sc.next() + " " + sc.nextDouble() + " " + sc.nextInt() + " " + sc.nextInt() + " " + sc.next() + " " + sc.next() + " " + sc.nextInt() + " " + sc.nextInt()); 
             }
        } catch (FileNotFoundException | SQLException ex) {
             Logger.getLogger(Componenta.class.getName()).log(Level.SEVERE, null, ex);
@@ -170,16 +170,14 @@ public class Produs {
             Connection con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
             String sql =  "select max(codprodus) from produs";
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            
+            ResultSet rs = stmt.executeQuery(sql);          
             if(rs.next())
                 
                 return rs.getInt(1);
             
         } catch (SQLException ex) {
             Logger.getLogger(Componenta.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        }     
         return -1;
     }
     
@@ -213,8 +211,7 @@ public class Produs {
             
         } catch (SQLException ex) {
             Logger.getLogger(Componenta.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        }      
     }
     
     public void sellProdus(int cod){
@@ -224,8 +221,7 @@ public class Produs {
             PreparedStatement pstm;
             String sql_1= "select stoc from produs where codprodus = ? ";
             con.setAutoCommit(false);
-            pstm = con.prepareStatement(sql_1);
-            
+            pstm = con.prepareStatement(sql_1);           
             pstm.setInt(1, cod);
             ResultSet rs = pstm.executeQuery();
             con.commit();
@@ -234,8 +230,7 @@ public class Produs {
                 stoc = rs.getInt(1);
                 stoc -= 1;
                 String sql_2 = "update produs set `stoc` = ? where codprodus = ? ";
-                pstm = con.prepareStatement(sql_2);
-            
+                pstm = con.prepareStatement(sql_2);         
                 pstm.setInt(1, stoc);
                 pstm.setInt(2, cod);
                 int resultUpdate = pstm.executeUpdate();
@@ -259,7 +254,6 @@ public class Produs {
             sql = "delete from produs  where codprodus = ? ";
             con.setAutoCommit(false);
             pstm = con.prepareStatement(sql);
-            
             pstm.setInt(1, cod);
             int resultDelete = pstm.executeUpdate();
             con.commit();
@@ -281,12 +275,10 @@ public class Produs {
             String sql = "update produs set `stoc` = ? where codprodus = ? ";
             con.setAutoCommit(false);
             pstm = con.prepareStatement(sql);
-            
             pstm.setInt(1, 10);
             pstm.setInt(2, cod);
             int resultUpdate = pstm.executeUpdate();
             con.commit();
-            
             if (resultUpdate > 0)
                 System.out.println("Stoc efacut");
             else
@@ -338,7 +330,7 @@ public class Produs {
         }
     }
     public static void main(String[] args) {
-        
-    }
-    
+        Produs s = new Produs();
+        s.readFromFile();
+    }   
 }

@@ -26,10 +26,10 @@ public class DBUtil {
             case MYSQLDB:
                 return DriverManager.getConnection(mySQLCS, mySQLUser, mySQLPass);
             default:
-                return null;
-                
+                return null;   
         }
     }
+    
     public static void showErrorMessage(SQLException e){
 		System.err.println("Error :" + e.getMessage());
 		System.err.println("Error Code :" + e.getErrorCode());

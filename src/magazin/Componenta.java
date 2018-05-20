@@ -55,7 +55,6 @@ public class Componenta {
             String sql_insert ;
             PreparedStatement pstm ;
 
-
             file = new FileReader ("componente.txt");
             Scanner sc = new Scanner( file );
             
@@ -146,8 +145,6 @@ public class Componenta {
         return -1;
     }
     public static void main(String[] args) {
-        
-        
+          readFromFile();
     }
-    
 }
