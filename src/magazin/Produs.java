@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package magazin;
 import DataBase.*;
 import java.util.Scanner;
@@ -15,6 +10,7 @@ import java.sql.*;
  * @author AndreiZanfir
  */
 public class Produs {
+    private static Connection con;
     private static int contorProdus;
     private int codProdus;
     private String producator;
@@ -26,6 +22,9 @@ public class Produs {
     private int stoc;
     private int tip;
 
+    public Connection getCon(){
+        return con;
+    }
     public int getCodProdus() {
         return codProdus;
     }
@@ -108,6 +107,11 @@ public class Produs {
         this.taraProvenienta = " ";
         this.stoc = 0;
         this.tip = 0;
+        try {
+            con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
+        } catch (SQLException ex) {
+            Logger.getLogger(Produs.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public Produs(int codProdus, String producator, String model, double pretProdus, int anFabricatie, String garantie, String taraProvenienta, int stoc, int tip) {
@@ -120,39 +124,45 @@ public class Produs {
         this.taraProvenienta = taraProvenienta;
         this.stoc = stoc;
         this.tip = tip;
+        try {
+            con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
+        } catch (SQLException ex) {
+            Logger.getLogger(Produs.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     
-    public void readFromFile(){
+    public String readFromFile(){
         contorProdus = 0;
         FileReader file = null;
-
+        int rs = 0;
        try {
-            Connection con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
             String sql ;
             PreparedStatement pstm ;
-            file = new FileReader ("produse.txt");
+
+            file = new FileReader ("Produse.txt");
             Scanner sc = new Scanner( file );
-       
-            while(sc.hasNextLine())
+            
+            while(sc.hasNext())
             {
-                /*contorProdus++;
+                contorProdus++;
                 sql = "insert into produs values (?,?,?,?,?,?,?,?,?)";
                 con.setAutoCommit(false);
                 pstm = con.prepareStatement(sql);
                 
-                pstm.setInt(1 , contorProdus );                          //cod produs
-                pstm.setString(2 , sc.next());                           //producator
-                pstm.setString(3 , sc.next());                           //model
-                pstm.setDouble(4 , sc.nextDouble());                     //pret produs
-                pstm.setInt(5 , sc.nextInt());                           //an fabricatie
-                pstm.setString(6 , sc.nextInt() + " " + sc.next());      //garantie
-                pstm.setString(7 , sc.next());                           //tara provenienta
-                pstm.setInt(8 , sc.nextInt());                           //stoc
-                pstm.setInt(9 , sc.nextInt());                           //tip
-          
-                pstm.execute();
-                con.commit(); */
-                System.out.println(sc.next() + " " + sc.next() + " " + sc.nextDouble() + " " + sc.nextInt() + " " + sc.nextInt() + " " + sc.next() + " " + sc.next() + " " + sc.nextInt() + " " + sc.nextInt()); 
+                pstm.setInt(1 , contorProdus );
+                pstm.setString(2 , sc.next());
+                pstm.setString(3 , sc.next());
+                pstm.setDouble(4 , sc.nextDouble());
+                pstm.setInt(5 , sc.nextInt());
+                pstm.setString(6 , sc.nextInt() + " " + sc.next());
+                pstm.setString(7 , sc.next());
+                pstm.setInt(8 , sc.nextInt());
+                pstm.setInt(9 , sc.nextInt());
+               
+                //pstm.execute();
+                rs = pstm.executeUpdate();
+                con.commit();    
             }
        } catch (FileNotFoundException | SQLException ex) {
             Logger.getLogger(Componenta.class.getName()).log(Level.SEVERE, null, ex);
@@ -163,29 +173,40 @@ public class Produs {
                 Logger.getLogger(Componenta.class.getName()).log(Level.SEVERE, null, ex);
             }
        }
+       if (rs > 0)
+                    return "Successfully Insert";
+                else
+                    return "Insert Failed" ; 
     }
     
-    public int getLastId(){
+    public  int getLastId(){
         try {
-            Connection con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
             String sql =  "select max(codprodus) from produs";
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);          
+            ResultSet rs = stmt.executeQuery(sql);
+            
             if(rs.next())
                 
                 return rs.getInt(1);
             
         } catch (SQLException ex) {
             Logger.getLogger(Componenta.class.getName()).log(Level.SEVERE, null, ex);
-        }     
+        }
+        
         return -1;
     }
+
+    @Override
+    public String toString() {
+        return "Produs{" + "codProdus=" + codProdus + ", producator=" + producator + ", model=" + model + ", pretProdus=" + pretProdus + ", anFabricatie=" + anFabricatie + ", garantie=" + garantie + ", taraProvenienta=" + taraProvenienta + ", stoc=" + stoc + ", tip=" + tip + '}';
+    }
     
-    public void readFromKey(Produs p){
+    public  String readFromKey(Produs p){
+         int resultInser = 0 ;
         try {
-            Connection con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
             String sql ;
             PreparedStatement pstm ;
+             
            
             contorProdus = getLastId();
             if(contorProdus <= 0) 
@@ -197,7 +218,7 @@ public class Produs {
             con.setAutoCommit(false);
             pstm = con.prepareStatement(sql);
 
-            pstm.setInt(1 , 4 );
+            pstm.setInt(1 , contorProdus );
             pstm.setString(2 , p.producator );
             pstm.setString(3 , p.model);
             pstm.setDouble(4 , p.pretProdus);
@@ -206,22 +227,29 @@ public class Produs {
             pstm.setString(7 , p.taraProvenienta );
             pstm.setInt(8 , p.stoc );
             pstm.setInt(9 , p.tip );
-            pstm.execute();
+            //pstm.execute();
+            
+            resultInser = pstm.executeUpdate(sql);
             con.commit(); 
             
         } catch (SQLException ex) {
             Logger.getLogger(Componenta.class.getName()).log(Level.SEVERE, null, ex);
-        }      
+        }
+        if (resultInser > 0)
+                    return "Successfully Insert";
+                else
+                    return "Insert Failed" ; 
     }
     
-    public void sellProdus(int cod){
+    public String sellProdus(int cod){
+        int resultUpdate = 0;
         try {
             int stoc ;
-            Connection con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
             PreparedStatement pstm;
             String sql_1= "select stoc from produs where codprodus = ? ";
             con.setAutoCommit(false);
-            pstm = con.prepareStatement(sql_1);           
+            pstm = con.prepareStatement(sql_1);
+            
             pstm.setInt(1, cod);
             ResultSet rs = pstm.executeQuery();
             con.commit();
@@ -230,70 +258,71 @@ public class Produs {
                 stoc = rs.getInt(1);
                 stoc -= 1;
                 String sql_2 = "update produs set `stoc` = ? where codprodus = ? ";
-                pstm = con.prepareStatement(sql_2);         
+                pstm = con.prepareStatement(sql_2);
+            
                 pstm.setInt(1, stoc);
                 pstm.setInt(2, cod);
-                int resultUpdate = pstm.executeUpdate();
+                resultUpdate = pstm.executeUpdate();
                 con.commit();
-                
-                if (resultUpdate > 0)
-                    System.out.println("Successfully Updated");
-                else
-                    System.out.println("Update Failed");    
+        
             }
         } catch (SQLException ex) {
             Logger.getLogger(Produs.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (resultUpdate > 0)
+                return "Successfully Updated" ;
+            else
+                return "Update Failed";  
     }
     
-    public void deleteProdus(int cod){
+    public String deleteProdus(int cod){
+        int resultDelete = 0 ;
         try {
-            Connection con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
             String sql ;
             PreparedStatement pstm ;
-            sql = "delete from produs  where codprodus = ? ";
+            sql = "delete from produs where codprodus = ? ";
             con.setAutoCommit(false);
             pstm = con.prepareStatement(sql);
+            
             pstm.setInt(1, cod);
-            int resultDelete = pstm.executeUpdate();
+            resultDelete = pstm.executeUpdate();
             con.commit();
-            
-            if (resultDelete > 0)
-                System.out.println("Successfully Deleted");
-            else
-                System.out.println("Delete Failed");  
-            
+      
         } catch (SQLException ex) {
             Logger.getLogger(Produs.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        if (resultDelete > 0)
+                return "Successfully Deleted";
+            else
+                return "Delete Failed";
     }
     
-    public void incarcareStoc(int cod){
+    public String incarcareStoc(int cod){
+        int resultUpdate = 0;
         try {
-            Connection con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
             PreparedStatement pstm;
             String sql = "update produs set `stoc` = ? where codprodus = ? ";
             con.setAutoCommit(false);
             pstm = con.prepareStatement(sql);
+            
             pstm.setInt(1, 10);
             pstm.setInt(2, cod);
-            int resultUpdate = pstm.executeUpdate();
+            resultUpdate = pstm.executeUpdate();
             con.commit();
-            if (resultUpdate > 0)
-                System.out.println("Stoc efacut");
-            else
-                System.out.println("Nu s-a putut reface stocul");
             
         } catch (SQLException ex) {
             Logger.getLogger(Produs.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (resultUpdate > 0)
+                return "Stoc refacut";
+            else
+                return "Nu s-a putut reface stocul";
     }
    
-    public Double pretTotalPerCategorie( int tip ){
+    public static Double pretTotalPerCategorie( int tip ){
         Double pret = 0.0;
         try {
-            
-            Connection con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
             PreparedStatement pstm;
             String sql= "select pretprodus , stoc from produs where tip = ? ";
             con.setAutoCommit(false);
@@ -313,7 +342,6 @@ public class Produs {
     }
     public void showPretByProducator(String producator){
         try {
-            Connection con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
             PreparedStatement pstm;
             String sql= "select producator, model, pretprodus from produs where producator = ? ";
             con.setAutoCommit(false);
@@ -329,8 +357,22 @@ public class Produs {
             Logger.getLogger(Produs.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    public int hasThisCod( int cod ){
+        try {
+            String sql_select = "select codprodus from produs";
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql_select);
+            while(rs.next())
+                if( cod == rs.getInt(1))
+                    return 1;
+        } catch (SQLException ex) {
+            Logger.getLogger(Produs.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+   
     public static void main(String[] args) {
-        Produs s = new Produs();
-        s.readFromFile();
-    }   
+       
+    }
+    
 }

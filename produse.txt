@@ -1,3 +1,11 @@
-Asus GlW533 3934.50 2016 2 luni Romania 5 1
-Intel I7 1405.82 2015 2 luni Italia 10 2
-Huawei isajh 150.55 2014 1 luni Japonia 20 1
+Asus GlW533 3934,50 2016 12 luni Romania 5 1
+Intel I7 1405,82 2015 12 luni Italia 10 2
+Huawei isajh 150,55 2014 12 luni Japonia 20 1
+Asus GlW533 3934,50 2016 12 luni Romania 5 1
+Intel I7 1405,82 2015 12 luni Italia 10 2
+Huawei isajh 150,55 2014 12 luni Japonia 20 1
+Intel GamingViking 29,99 2014 22 luni Anglia 3 2
+Seagate Expansion 224,99 2014 3 luni Germania 30 5
+ADATA DashDriveHD650 220,92 2014 3 luni Suedia 15 5
+NVIDIA PNYQuadroP400 625,55 2014 10 luni Romania 7 3
+Matrox M9140 2788,27 2014 24 luni China 2 3
