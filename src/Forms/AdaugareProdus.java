@@ -167,7 +167,7 @@ public class AdaugareProdus extends javax.swing.JFrame {
 
         Instr11.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         Instr11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        Instr11.setText("(ex: Procesoare)");
+        Instr11.setText("(ex: Procesor)");
 
         Instr12.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         Instr12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -329,9 +329,9 @@ public class AdaugareProdus extends javax.swing.JFrame {
        //TextField1.getText()
        //JOptionPane.showMessageDialog(null , prod.readFromKey(prod));
        // System.out.println( prod.readFromKey(prod) );
-        System.out.println( prod.toString());
-       //prod.readFromKey(prod);
-       JOptionPane.showMessageDialog(null , "Successfully Inserted");
+        //System.out.println( prod.toString());
+       
+       JOptionPane.showMessageDialog(null , prod.readFromKey(prod));
         //CODUL PENTRU readFromKey - adaugare in BD ceea ce scrie utilizatorul in text-field   
     }//GEN-LAST:event_ButonAdaugaActionPerformed
 

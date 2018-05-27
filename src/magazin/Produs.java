@@ -229,7 +229,7 @@ public class Produs {
             pstm.setInt(9 , p.tip );
             //pstm.execute();
             
-            resultInser = pstm.executeUpdate(sql);
+            resultInser = pstm.executeUpdate();
             con.commit(); 
             
         } catch (SQLException ex) {
