@@ -8,7 +8,7 @@ CREATE TABLE `magazin`.`produs`  (
    	`CodProdus` int NOT NULL AUTO_INCREMENT,
 	`Producator` varchar(50) NOT NULL,
 	`Model` varchar(50) NOT NULL,
-	`PretProdus` double(10) NOT NULL,
+	`PretProdus` double(10,0) NOT NULL,
 	`AnFabricatie` int(10) NOT NULL,
 	`Garantie` varchar(10) NOT NULL,
 	`TaraProvenienta` varchar(50) NOT NULL,

@@ -1,5 +1,5 @@
-Procesor
-Placa de baza
-Placa video
-Memorii
-Hdd
+Procesoare
+Placi de baza
+Placi video
+Memorii RAM
+HDD

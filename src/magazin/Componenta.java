@@ -14,7 +14,9 @@ import java.sql.*;
  *
  * @author AndreiZanfir
  */
+
 public class Componenta {
+    private static Connection con;
     private static int contorComponenta;
     private int id;
     private String nume;
@@ -22,13 +24,26 @@ public class Componenta {
     public Componenta(){
         id = 0 ;
         nume=" ";
+        try {
+            con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
+        } catch (SQLException ex) {
+            Logger.getLogger(Componenta.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     
     public Componenta(int id, String nume) {
         this.id = id;
         this.nume = nume;
+        try {
+            con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
+        } catch (SQLException ex) {
+            Logger.getLogger(Componenta.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-
+    public Connection getCon() {
+        return con;
+    }
     public int getId() {
         return id;
     }
@@ -46,12 +61,11 @@ public class Componenta {
     }
     
     //citire din fisier
-    public static void readFromFile() {
+    public void readFromFile() {
         contorComponenta = 0;
         FileReader file = null;
 
        try {
-            Connection con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
             String sql_insert ;
             PreparedStatement pstm ;
 
@@ -68,7 +82,7 @@ public class Componenta {
                 
                 pstm.setInt(1 , contorComponenta );
                 pstm.setString(2 , sc.nextLine());
-                pstm.execute();
+                pstm.execute() ;
                 con.commit();    
             }
 
@@ -83,9 +97,8 @@ public class Componenta {
        }   
     }
     
-    public static int getLastId(){
+    public int getLastId(){
         try {
-            Connection con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
             String sql =  "select max(id) from componenta";
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -101,9 +114,8 @@ public class Componenta {
         return -1;
     }
     //citire de la tasatura / gui aplicatie
-    public static void readFromKey(Componenta c){
+    public void readFromKey(Componenta c){
         try {
-            Connection con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
             String sql_insert ;
             PreparedStatement pstm ;
            
@@ -127,10 +139,9 @@ public class Componenta {
         }
     } 
     //iti returneaza id-ul unei anumite categori
-    public int getIdByName(String nume) {
+    public int  getIdByName(String nume) {
         try {
-            Connection con = (Connection) DBUtil.getConnection(DBType.MYSQLDB);
-            String sql= "select Id from componenta where Nume = ?";
+            String sql= "select Id from componenta where Nume = ? ";
             con.setAutoCommit(false);
             PreparedStatement pstm = con.prepareStatement(sql);
             
@@ -146,7 +157,6 @@ public class Componenta {
         return -1;
     }
     public static void main(String[] args) {
-        
         
     }
     
